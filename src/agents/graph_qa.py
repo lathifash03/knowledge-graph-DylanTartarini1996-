@@ -1,4 +1,4 @@
-from typing import List, Optional, Any, Dict, Tuple
+from typing import List, Optional, Any, Dict, Tuple, Union
 
 from langchain_core.messages import BaseMessage
 from langchain_neo4j.chains.graph_qa.cypher import GraphCypherQAChain
@@ -60,7 +60,7 @@ class GraphAgentResponder:
         query: str, 
         intermediate_steps: bool=False, 
         history: str=None
-        ) -> str | Tuple[str, List]:
+        ) -> Union[str, Tuple[str, List]]:
         """ 
         Uses only the Cypher chain to answer the user's question.
         """

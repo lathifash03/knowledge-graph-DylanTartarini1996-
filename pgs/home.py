@@ -30,15 +30,20 @@ st.markdown(
 
 
 st.page_link(
-    page=st.Page("pgs/upload.py"), 
+    page=st.Page("pgs/upload.py"),
     icon="🗳️",
     label="Upload one document and ingest it into a Knowledge Graph representation in your Neo4j database;"
-) 
+)
 st.page_link(
-    page=st.Page("pgs/chat.py"), 
+    page=st.Page("pgs/upload_chunks.py"),
+    icon="🧩",
+    label="Ingest a pre-built JSONL chunks dataset directly into the Knowledge Graph;"
+)
+st.page_link(
+    page=st.Page("pgs/chat.py"),
     icon="🦜",
     label="Chat with the Knowledge Graph using LLM-powered Agents"
-) 
+)
 # st.page_link(
 #     page=st.Page("pgs/display.py"), 
 #     icon="🕸️",

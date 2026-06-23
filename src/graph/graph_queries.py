@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 import networkx as nx
 from neo4j import Query, Session
 
@@ -16,7 +16,7 @@ def document_metadata(session: Session, filename: str, version: Optional[int]) -
     pass
 
 
-def get_chunk_element_id(session: Session, chunk: Chunk) -> str | None:
+def get_chunk_element_id(session: Session, chunk: Chunk) -> Optional[str]:
     """ Returns the unique elementId in the graph for a given `Chunk`"""
     
     query = """ 
@@ -41,7 +41,7 @@ def get_adjacent_chunks(
     session: Session, 
     chunk: Chunk, 
     use_elementId: bool=False
-    ) -> Tuple[Chunk | None, Chunk , Chunk | None]:
+    ) -> Tuple[Optional[Chunk], Chunk, Optional[Chunk]]:
     """
     Returns a tuple with the previous , current and following `Chunk` 
     given an initial node characterised by a `filename` and a `chunk_id`.  

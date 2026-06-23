@@ -85,7 +85,7 @@ if conf:
             f.metric(
                 label="Leiden Modularity",
                 help="The higher it is, the more connected communities in the Graph",
-                value=round(knowledge_graph.leiden_modularity, 4)
+                value=round(knowledge_graph.leiden_modularity, 4) if knowledge_graph.leiden_modularity is not None else "N/A"
             )
             g.metric(
                 label="Louvain Communities",
@@ -95,7 +95,7 @@ if conf:
             h.metric(
                 label="Louvain Modularity",
                 help="The higher it is, the more connected communities in the Graph",
-                value=round(knowledge_graph.louvain_modularity, 4)
+                value=round(knowledge_graph.louvain_modularity, 4) if knowledge_graph.louvain_modularity is not None else "N/A"
             )
 
 

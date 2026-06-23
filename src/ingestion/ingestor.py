@@ -1,7 +1,7 @@
 import os
 import magic
 from abc import abstractmethod
-from typing import List, Tuple, Optional, Dict, Any
+from typing import List, Tuple, Optional, Dict, Any, Union
 
 from langchain.schema import Document
 from langchain_community.document_loaders import TextLoader, Docx2txtLoader, PDFPlumberLoader, BSHTMLLoader
@@ -87,7 +87,7 @@ class Ingestor:
         return processed_doc
 
     
-    def ingest(self, filename: str, metadata: Dict[str, Any]) -> ProcessedDocument | None:
+    def ingest(self, filename: str, metadata: Dict[str, Any]) -> Optional[ProcessedDocument]:
         """ 
         Loads a file from a path and turn it into a `ProcessedDocument`
         """

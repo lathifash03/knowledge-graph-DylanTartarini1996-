@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 from langchain_core.load.serializable import Serializable
 from langchain_neo4j.graphs.graph_document import Node, Relationship
 
 
 class Chunk(BaseModel):
-    chunk_id: int | str
+    chunk_id: Union[int, str]
     text: str
     filename: Optional[str] = None
     embedding: Optional[List[float]] = None

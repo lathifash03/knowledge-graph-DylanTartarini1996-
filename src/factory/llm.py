@@ -1,5 +1,5 @@
+from typing import Optional
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from langchain_groq.chat_models import ChatGroq
 from langchain_ollama.chat_models import ChatOllama
 from langchain_openai.chat_models import ChatOpenAI, AzureChatOpenAI
@@ -11,7 +11,7 @@ from src.config import LLMConf
 logger = get_logger(__name__)
 
 
-def fetch_llm(conf: LLMConf) -> BaseChatModel | None:
+def fetch_llm(conf: LLMConf) -> Optional[BaseChatModel]:
     """
     Fetches the LLM model.
     """
@@ -40,12 +40,13 @@ def fetch_llm(conf: LLMConf) -> BaseChatModel | None:
         )
     elif conf.type == "groq":
         llm = ChatGroq(
-            model=conf.model, 
+            model=conf.model,
             api_key=conf.api_key,
             temperature=conf.temperature,
             max_retries=3
         )
     elif conf.type == "google":
+        from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
         llm = ChatGoogleGenerativeAI(
             model=conf.model,
             api_key=conf.api_key,
@@ -60,6 +61,6 @@ def fetch_llm(conf: LLMConf) -> BaseChatModel | None:
     else:
         logger.warning(f"LLM type '{conf.type}' not supported.")
         llm = None
-    
+
     logger.info(f"Initialized LLM of type: '{conf.type}'")
-    return llm 
+    return llm

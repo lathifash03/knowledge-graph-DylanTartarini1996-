@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from src.graph.knowledge_graph import KnowledgeGraph
 from src.factory.embeddings import get_embeddings
 from src.factory.llm import fetch_llm
@@ -41,7 +41,7 @@ class CommunitiesSummarizer:
         return reports
             
     
-    def get_community_report(self, community: Community) -> CommunityReport | None:
+    def get_community_report(self, community: Community) -> Optional[CommunityReport]:
         """ 
         Generates a CommunityReport for a given community, out of chunks available in said community. 
         It will also embed the summary to make it retrievable

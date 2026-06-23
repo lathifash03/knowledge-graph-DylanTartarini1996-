@@ -5,13 +5,13 @@ from igraph import Graph
 from leidenalg import find_partition, ModularityVertexPartition
 from src.utils.logger import get_logger
 from neo4j import Query, Session
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Union
 
 
 logger = get_logger(__name__)
 
 
-def detect_louvain_communities(G: nx.DiGraph, return_modularity:bool=True) -> nx.DiGraph | Tuple[nx.DiGraph, float]:
+def detect_louvain_communities(G: nx.DiGraph, return_modularity:bool=True) -> Union[nx.DiGraph, Tuple[nx.DiGraph, float]]:
     """ 
     Detects Louvain communities for a `networkx` Directed Graph. 
     If `return_modularity`, also return the modularity of the Graph according to 
@@ -35,7 +35,7 @@ def detect_louvain_communities(G: nx.DiGraph, return_modularity:bool=True) -> nx
         return G, modularity 
     
 
-def detect_leiden_communities(G: nx.DiGraph, return_modularity:bool=True) -> nx.DiGraph | Tuple[nx.DiGraph, float]:
+def detect_leiden_communities(G: nx.DiGraph, return_modularity:bool=True) -> Union[nx.DiGraph, Tuple[nx.DiGraph, float]]:
     """
     Detects Leiden communities for a `networkx` Directed Graph. 
     If `return_modularity`, also return the modularity of the Graph according to 
@@ -69,7 +69,7 @@ def detect_leiden_communities(G: nx.DiGraph, return_modularity:bool=True) -> nx.
         return G, modularity
     
 
-def compute_centralities(G: nx.DiGraph | nx.Graph) -> nx.DiGraph | nx.Graph:
+def compute_centralities(G: Union[nx.DiGraph, nx.Graph]) -> Union[nx.DiGraph, nx.Graph]:
     """
     Compute PageRank, Betweenness and Closeness Centralities and store them as metadata in the graph
     """
