@@ -22,15 +22,9 @@ class GraphExtractor:
         self.llm = fetch_llm(conf)
         self.prompt = get_graph_extractor_prompt()
 
-        self.prompt.partial_variables = {
-            'allowed_labels':ontology.allowed_labels if ontology and ontology.allowed_labels else "", 
-            'labels_descriptions': ontology.labels_descriptions if ontology and ontology.labels_descriptions else "", 
-            'allowed_relationships': ontology.allowed_relations if ontology and ontology.allowed_relations else ""
-        }
 
-
-    def extract_graph(self, text: str) -> _Graph:
-        """ 
+    def extract_graph(self, text: str, source_name: str = "unknown", source_format: str = "unknown") -> _Graph:
+        """
         Extracts a graph from a text.
         """
 
@@ -39,10 +33,14 @@ class GraphExtractor:
                 graph: _Graph = self.llm.with_structured_output(
                     schema=_Graph
                     ).invoke(
-                        input=self.prompt.format(input_text=text)
+                        input=self.prompt.format(
+                            input_text=text,
+                            source_name=source_name,
+                            source_format=source_format
+                        )
                     )
 
-                return graph 
-                
+                return graph
+
             except Exception as e:
                 logger.warning(f"Error while extracting graph: {e}")

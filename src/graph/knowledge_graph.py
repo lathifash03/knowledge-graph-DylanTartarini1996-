@@ -303,7 +303,7 @@ class KnowledgeGraph(Neo4jGraph):
         ):
         query = """
             MATCH (c:Chunk {chunk_id: $chunk_id, filename: $filename, document_version: $document_version})
-            MATCH (e:__Entity__ {id: $node_id})
+            MATCH (e {id: $node_id}) WHERE NOT e:Chunk AND NOT e:Document
             MERGE (c)-[:MENTIONS]->(e)
         """
         try:
@@ -465,9 +465,9 @@ class KnowledgeGraph(Neo4jGraph):
 
                 try:
                     self.add_graph_documents(
-                        graph_documents=[graph_doc], 
+                        graph_documents=[graph_doc],
                         include_source=False,
-                        baseEntityLabel=True
+                        baseEntityLabel=False
                     )
 
                     for node in chunk.nodes:
