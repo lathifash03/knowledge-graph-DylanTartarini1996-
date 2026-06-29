@@ -34,6 +34,10 @@ class GraphMiner:
                     source_format=source_format
                 )
 
+                if graph is None:
+                    logger.warning(f"Skipping chunk — graph extraction returned None.")
+                    continue
+
                 graph_doc = map_to_lc_graph(graph, source_content=chunk.text)
 
                 chunk.nodes = graph_doc.nodes
