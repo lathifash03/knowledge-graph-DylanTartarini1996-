@@ -2,7 +2,7 @@ from src.utils.logger import get_logger
 from typing import List, Optional
 
 from src.agents.graph_extractor import GraphExtractor
-from src.graph.graph_model import _Graph, Ontology, map_to_lc_graph
+from src.graph.graph_model import _Graph, Ontology, map_to_lc_graph, sanitize_graph
 from src.config import LLMConf
 from src.schema import ProcessedDocument
 
@@ -26,6 +26,11 @@ class GraphMiner:
         source_name = doc.filename or "unknown"
         source_format = (doc.metadata or {}).get("source_kind", source_name.rsplit(".", 1)[-1] if "." in source_name else "unknown")
 
+        # Shared across ALL chunks of this document so the has_source cap is
+        # enforced per-document, not per-chunk (otherwise an N-chunk document
+        # could accumulate up to 3*N has_source edges instead of 3 total).
+        has_source_state: dict = {}
+
         for chunk in doc.chunks:
             try:
                 graph: _Graph = self.graph_extractor.extract_graph(
@@ -38,6 +43,14 @@ class GraphMiner:
                     logger.warning(f"Skipping chunk — graph extraction returned None.")
                     continue
 
+                # Deterministically enforce the ontology (directions, has_source cap,
+                # single Source, no self-loops) before mapping to the graph store.
+                graph = sanitize_graph(graph, source_name=source_name, has_source_state=has_source_state)
+
+                if graph is None:
+                    logger.warning(f"Skipping chunk — no valid graph after sanitization.")
+                    continue
+
                 graph_doc = map_to_lc_graph(graph, source_content=chunk.text)
 
                 chunk.nodes = graph_doc.nodes
@@ -46,7 +59,7 @@ class GraphMiner:
             except Exception as e:
                 logger.warning(f"Error while mining graph: {e}")
 
-            logger.info(f"Created a graph representation for {len(doc.chunks)} chunks.")
+        logger.info(f"Created a graph representation for {len(doc.chunks)} chunks in {source_name}.")
 
         return doc
 
